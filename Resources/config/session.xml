@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://www.symfony-project.org/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="azure.session.class">Symfony\Component\HttpFoundation\Session</parameter>
+        <parameter key="azure.session.sessionstorage.class">Bundle\AzureBundle\Session\AzureSessionStorage</parameter>
+        <parameter key="azure.session.handler.class">Microsoft_WindowsAzure_SessionHandler</parameter>
+        <parameter key="azure.session.handler.options.table">sessions</parameter>
+        <parameter key="azure.session.storage.class">Microsoft_WindowsAzure_Storage_Table</parameter>
+        <parameter key="azure.session.storage.options.domain">table.core.windows.net</parameter>
+        <parameter key="azure.session.storage.options.account"></parameter>
+        <parameter key="azure.session.storage.options.key"></parameter>
+
+        <!-- Injections -->
+        <parameter key="session.storage.azure.options"></parameter>
+    </parameters>
+
+    <services>
+        <service id="azure.session" class="%azure.session.class%">
+            <argument type="service" id="azure.session.sessionstorage" />
+            <argument type="collection">
+                <argument key="default_locale">%session.default_locale%</argument>
+            </argument>
+        </service>
+
+        <service id="azure.session.sessionstorage" class="%azure.session.sessionstorage.class%">
+            <argument type="service" id="azure.session.handler" />
+            <argument>%session.storage.native.options%</argument>
+        </service>
+
+        <service id="azure.session.handler" class="%azure.session.handler.class%">
+            <argument type="service" id="azure.session.storage" />
+            <argument>%azure.session.handler.options.table%</argument>
+        </service>
+
+        <service id="azure.session.storage" class="%azure.session.storage.class%">
+            <argument>%azure.session.storage.options.domain%</argument>
+            <argument>%azure.session.storage.options.account%</argument>
+            <argument>%azure.session.storage.options.key%</argument>
+        </service>
+
+        <service id="session.storage.azure" alias="azure.session.sessionstorage">
+        </service>
+    </services>
+</container>

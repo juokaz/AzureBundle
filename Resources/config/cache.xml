@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://www.symfony-project.org/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="azure.cache.class">Bundle\AzureBundle\Cache\AzureCache</parameter>
+        <parameter key="azure.cache.options.table">cache</parameter>
+        <parameter key="azure.cache.storage.class">Microsoft_WindowsAzure_Storage_Table</parameter>
+        <parameter key="azure.cache.storage.options.domain">table.core.windows.net</parameter>
+        <parameter key="azure.cache.storage.options.account"></parameter>
+        <parameter key="azure.cache.storage.options.key"></parameter>
+    </parameters>
+
+    <services>
+        <service id="azure.cache" class="%azure.cache.class%">
+            <argument type="service" id="azure.cache.storage" />
+            <argument>%azure.cache.options.table%</argument>
+        </service>
+
+        <service id="azure.cache.storage" class="%azure.cache.storage.class%">
+            <argument>%azure.cache.storage.options.domain%</argument>
+            <argument>%azure.cache.storage.options.account%</argument>
+            <argument>%azure.cache.storage.options.key%</argument>
+        </service>
+    </services>
+</container>

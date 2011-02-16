@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://www.symfony-project.org/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="azure.doctrine.cache.class">Bundle\AzureBundle\Doctrine\AzureCacheAdapter</parameter>
+
+        <!-- Injections -->
+        <parameter key="doctrine.orm.cache.azure_class">%azure.doctrine.cache.class%</parameter>
+    </parameters>
+
+    <services>
+        <service id="azure.doctrine.cache" class="%azure.doctrine.cache.class%">
+            <argument type="service" id="azure.cache" />
+        </service>
+    </services>
+</container>
